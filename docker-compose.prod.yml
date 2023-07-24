@@ -1,0 +1,16 @@
+version: "3"
+services:
+  nginx:
+    ports: 
+      - "80:80"
+  node-app:
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - MYSQL_DB_NAME=teams
+      - MYSQL_HOST=db
+    command: npm start
+
+

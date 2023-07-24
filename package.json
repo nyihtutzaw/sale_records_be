@@ -1,0 +1,33 @@
+{
+  "name": "docker-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "lint": "eslint .",
+    "pre-commit": "eslint --ignore-path .eslintignore --max-warnings=0 .",
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
+    "docker:dev-build": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build",
+    "docker:dev-down": "docker-compose down"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.22",
+    "redis": "^4.6.5",
+    "sequelize": "^6.21.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.38.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
