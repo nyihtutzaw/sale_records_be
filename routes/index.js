@@ -1,8 +1,11 @@
 const { Router } = require('express');
 
+const AuthMiddleware = require('../middlewares/auth');
+
 const AdminRoutes = require('./private/admin');
 const CustomerRoutes = require('./private/customer');
 const ProductRoutes = require('./private/product');
+const SaleRecordRoutes = require('./private/sale_record');
 const PublicRoutes = require('./public');
 
 module.exports = (app) => {
@@ -14,9 +17,11 @@ module.exports = (app) => {
   //     'Too many requests from this IP, please try again after 10 minutes.',
   // })
   PublicRoutes(routes);
+  routes.use(AuthMiddleware);
   ProductRoutes(routes);
   CustomerRoutes(routes);
   AdminRoutes(routes);
+  SaleRecordRoutes(routes);
   // app.use('/api/', [apiLimiter, routes])
   app.use('/api/', [routes]);
 };
