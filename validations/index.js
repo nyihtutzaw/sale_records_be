@@ -35,6 +35,21 @@ const Product_Create_Validation = [
   body('price').isLength(1),
 ];
 
+// eslint-disable-next-line camelcase
+const Sale_Record_Create_Validation = [
+  body('customer_id').isLength(1),
+  body('date').isLength(1),
+  body('sale_record_details').isLength(1),
+];
+
+// eslint-disable-next-line camelcase
+// const Sale_Record_Detail_Create_Validation = [
+//   body('product_id').isLength(1),
+//   body('sale_record_id').isLength(1),
+//   body('price').isLength(1),
+//   body('qty').isLength(1),
+// ];
+
 module.exports = {
   // eslint-disable-next-line camelcase
   Admin_Create_Validation,
@@ -44,4 +59,8 @@ module.exports = {
   Product_Create_Validation,
   // eslint-disable-next-line camelcase
   Admin_Login_Validation,
+  // eslint-disable-next-line camelcase
+  Sale_Record_Create_Validation,
+  // eslint-disable-next-line camelcase
+  // Sale_Record_Detail_Create_Validation,
 };
