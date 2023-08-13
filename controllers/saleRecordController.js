@@ -1,5 +1,5 @@
 const { SALE_RECORD_CACHE_KEY } = require('../constants/cacheKeys');
-const { SaleRecord, SaleRecordDetail } = require('../models');
+const { SaleRecord, SaleRecordDetail, Product } = require('../models');
 const redisClient = require('../redis');
 
 class SaleRecordController {
@@ -38,6 +38,12 @@ class SaleRecordController {
           {
             model: SaleRecordDetail,
             as: 'sale_record_details',
+            include: [
+              {
+                model: Product,
+                as: 'Product',
+              },
+            ],
           },
         ],
       });
@@ -62,6 +68,18 @@ class SaleRecordController {
         where: {
           id: req.params.id,
         },
+        include: [
+          {
+            model: SaleRecordDetail,
+            as: 'sale_record_details',
+            include: [
+              {
+                model: Product,
+                as: 'Product',
+              },
+            ],
+          },
+        ],
       });
       if (!result) {
         return res.status(404).json({ message: 'SaleRecord Not Found' });
