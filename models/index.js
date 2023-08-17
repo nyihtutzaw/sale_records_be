@@ -1,5 +1,6 @@
 const Admin = require('./model.admin');
 const Customer = require('./model.customer');
+const PaymentMethod = require('./model.payment_method');
 const Product = require('./model.product');
 const SaleRecord = require('./model.sale_record');
 const SaleRecordDetail = require('./model.sale_record_detail');
@@ -9,6 +10,9 @@ SaleRecord.belongsTo(Customer, {
 });
 SaleRecord.belongsTo(Admin, {
   foreignKey: 'created_by',
+});
+SaleRecord.belongsTo(PaymentMethod, {
+  foreignKey: 'payment_method_id',
 });
 // SaleRecordDetail.belongsTo(SaleRecord, {
 //   foreignKey: 'sale_record_id',
@@ -24,4 +28,5 @@ module.exports = {
   Customer,
   Product,
   Admin,
+  PaymentMethod,
 };
