@@ -38,6 +38,7 @@ const Product_Create_Validation = [
 // eslint-disable-next-line camelcase
 const Sale_Record_Create_Validation = [
   body('customer_id').isLength(1),
+  body('payment_method_id').isLength(1),
   body('date').isLength(1),
   body('sale_record_details').isLength(1),
 ];
@@ -49,6 +50,11 @@ const Sale_Record_Create_Validation = [
 //   body('price').isLength(1),
 //   body('qty').isLength(1),
 // ];
+
+// eslint-disable-next-line camelcase
+const PaymentMethod_Create_Validation = [
+  body('name').isLength(1),
+];
 
 module.exports = {
   // eslint-disable-next-line camelcase
@@ -62,5 +68,6 @@ module.exports = {
   // eslint-disable-next-line camelcase
   Sale_Record_Create_Validation,
   // eslint-disable-next-line camelcase
+  PaymentMethod_Create_Validation,
   // Sale_Record_Detail_Create_Validation,
 };

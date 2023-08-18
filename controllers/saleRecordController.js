@@ -1,5 +1,7 @@
 const { SALE_RECORD_CACHE_KEY } = require('../constants/cacheKeys');
-const { SaleRecord, SaleRecordDetail, Product } = require('../models');
+const {
+  SaleRecord, SaleRecordDetail, Product, Customer, PaymentMethod,
+} = require('../models');
 const redisClient = require('../redis');
 
 class SaleRecordController {
@@ -7,11 +9,16 @@ class SaleRecordController {
   async store(req, res) {
     try {
       // eslint-disable-next-line camelcase
-      const { customer_id, date, sale_record_details } = req.body;
+      const {
+      // eslint-disable-next-line camelcase
+        customer_id, payment_method_id, date, sale_record_details,
+      } = req.body;
 
       const saleRecord = await SaleRecord.create({
         // eslint-disable-next-line camelcase
         customer_id,
+        // eslint-disable-next-line camelcase
+        payment_method_id,
         date,
         created_by: req.id,
         // eslint-disable-next-line camelcase
@@ -44,6 +51,14 @@ class SaleRecordController {
                 as: 'Product',
               },
             ],
+          },
+          {
+            model: Customer,
+            as: 'Customer',
+          },
+          {
+            model: PaymentMethod,
+            as: 'payment_method',
           },
         ],
       });
@@ -78,6 +93,14 @@ class SaleRecordController {
                 as: 'Product',
               },
             ],
+          },
+          {
+            model: Customer,
+            as: 'Customer',
+          },
+          {
+            model: PaymentMethod,
+            as: 'payment_method',
           },
         ],
       });
