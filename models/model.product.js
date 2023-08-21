@@ -7,6 +7,10 @@ const Product = sequelize.define('Product', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  initPrice: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   price: {
     type: DataTypes.INTEGER,
     allowNull: false,

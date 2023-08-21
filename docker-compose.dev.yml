@@ -2,7 +2,7 @@ version: "3"
 services:
   nginx:
     ports: 
-      - "3000:80"
+      - "3300:80"
   node-app:
     volumes:
       - ./:/app
