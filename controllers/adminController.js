@@ -54,7 +54,6 @@ class AdminController {
         name,
         email,
         password,
-        role,
       } = req.body;
 
       const salt = await bcrypt.genSalt(10);
@@ -63,7 +62,6 @@ class AdminController {
       const admin = await Admin.create({
         name,
         email,
-        role,
         password: hashedPassword,
       });
       return res.status(200).json({ data: admin });

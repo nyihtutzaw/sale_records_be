@@ -7,12 +7,15 @@ class ProductController {
   async store(req, res) {
     try {
       // eslint-disable-next-line camelcase
-      const { name, price, initPrice } = req.body;
+      const {
+        name, price, initPrice, wholeSalePrice,
+      } = req.body;
 
       const result = await Product.create({
         name,
         price,
         initPrice,
+        wholeSalePrice,
       });
       return res.status(200).json({ data: result });
     } catch (error) {
