@@ -15,7 +15,6 @@ module.exports = (routes) => {
     SaleRecordController.store,
   );
   routes.get('/sale-record', SaleRecordCache, SaleRecordController.index);
-  routes.get('/sale-record/:id', SaleRecordController.each);
   routes.put('/sale-record/:id', SaleRecordController.update);
   routes.delete('/sale-record/:id', SaleRecordController.delete);
 };
