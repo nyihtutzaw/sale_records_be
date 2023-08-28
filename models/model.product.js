@@ -15,6 +15,10 @@ const Product = sequelize.define('Product', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  qty: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   wholeSalePrice: {
     type: DataTypes.INTEGER,
     allowNull: false,

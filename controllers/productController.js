@@ -8,13 +8,14 @@ class ProductController {
     try {
       // eslint-disable-next-line camelcase
       const {
-        name, price, initPrice, wholeSalePrice,
+        name, price, initPrice, wholeSalePrice,qty
       } = req.body;
 
       const result = await Product.create({
         name,
         price,
         initPrice,
+        qty,
         wholeSalePrice,
       });
       return res.status(200).json({ data: result });
