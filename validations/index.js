@@ -28,6 +28,7 @@ const Admin_Login_Validation = [
 const Customer_Create_Validation = [
   body('name').isLength(1),
   body('phone').isLength(1),
+  body('address').isLength(1),
 ];
 // eslint-disable-next-line camelcase
 const Product_Create_Validation = [

@@ -7,11 +7,12 @@ class CustomerController {
   async store(req, res) {
     try {
       // eslint-disable-next-line camelcase
-      const { name, phone } = req.body;
+      const { name, phone, address } = req.body;
 
       const result = await Customer.create({
         name,
         phone,
+        address,
       });
       return res.status(200).json({ data: result });
     } catch (error) {

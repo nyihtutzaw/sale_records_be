@@ -5,6 +5,7 @@
 const AdminController = require('../../controllers/adminController');
 // eslint-disable-next-line camelcase, import/order
 const Validate_Request = require('../../controllers/index');
+const saleRecordController = require('../../controllers/saleRecordController');
 const {
   // eslint-disable-next-line camelcase
   Admin_Login_Validation,
@@ -21,4 +22,6 @@ module.exports = (routes) => {
     Validate_Request,
     AdminController.login,
   );
+
+  routes.get('/sale-record/:id', saleRecordController.each);
 };
