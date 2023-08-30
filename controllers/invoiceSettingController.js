@@ -1,27 +1,28 @@
-const { PRODUCT_CACHE_KEY } = require('../constants/cacheKeys');
-const Product = require('../models/model.product');
+const { INVOICE_SETTING_CACHE_KEY } = require('../constants/cacheKeys');
+const InvoiceSetting = require('../models/model.invoice_setting');
 const redisClient = require('../redis');
 
-class ProductController {
+class InvoiceSettingController {
   // eslint-disable-next-line consistent-return, class-methods-use-this
   async store(req, res) {
     try {
       // eslint-disable-next-line camelcase
       const {
-        name, price, initPrice, wholeSalePrice, qty,
+      // eslint-disable-next-line camelcase
+        company_name, phone, address, notes,
       } = req.body;
 
-      const result = await Product.create({
-        name,
-        price,
-        initPrice,
-        qty,
-        wholeSalePrice,
+      const result = await InvoiceSetting.create({
+        // eslint-disable-next-line camelcase
+        company_name,
+        phone,
+        address,
+        notes,
       });
       return res.status(200).json({ data: result });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: 'Error saving Product' });
+      res.status(500).json({ message: 'Error saving setting' });
     }
   }
 
@@ -30,12 +31,12 @@ class ProductController {
     const query = {};
 
     try {
-      const result = await Product.findAll({
+      const result = await InvoiceSetting.findAll({
         where: query,
       });
 
       if (result.length > 0) {
-        await redisClient.set(PRODUCT_CACHE_KEY, JSON.stringify(result), {
+        await redisClient.set(INVOICE_SETTING_CACHE_KEY, JSON.stringify(result), {
           EX: 10,
           NX: true,
         });
@@ -49,13 +50,13 @@ class ProductController {
   // eslint-disable-next-line consistent-return, class-methods-use-this
   async each(req, res) {
     try {
-      const result = await Product.findOne({
+      const result = await InvoiceSetting.findOne({
         where: {
           id: req.params.id,
         },
       });
       if (!result) {
-        return res.status(404).json({ message: 'Product Not Found' });
+        return res.status(404).json({ message: 'InvoiceSetting Not Found' });
       }
       return res.status(200).json({ data: result });
     } catch (error) {
@@ -66,13 +67,13 @@ class ProductController {
   // eslint-disable-next-line consistent-return, class-methods-use-this
   async update(req, res) {
     try {
-      const result = await Product.update(req.body, {
+      const result = await InvoiceSetting.update(req.body, {
         where: {
           id: req.params.id,
         },
       });
       if (!result) {
-        return res.status(404).json({ message: 'Product Not Found' });
+        return res.status(404).json({ message: 'InvoiceSetting Not Found' });
       }
       return res.status(200).json({ message: 'Successfully Updated' });
     } catch (error) {
@@ -84,13 +85,13 @@ class ProductController {
   // eslint-disable-next-line class-methods-use-this, consistent-return
   async delete(req, res) {
     try {
-      const result = await Product.destroy({
+      const result = await InvoiceSetting.destroy({
         where: {
           id: req.params.id,
         },
       });
       if (!result) {
-        return res.status(404).json({ message: 'Product Not Found' });
+        return res.status(404).json({ message: 'InvoiceSetting Not Found' });
       }
       return res.status(200).json({ message: 'Successfully Deleted' });
     } catch (error) {
@@ -99,4 +100,4 @@ class ProductController {
     }
   }
 }
-module.exports = new ProductController();
+module.exports = new InvoiceSettingController();
