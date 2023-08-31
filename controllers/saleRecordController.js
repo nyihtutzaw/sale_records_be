@@ -1,4 +1,5 @@
 const { SALE_RECORD_CACHE_KEY } = require('../constants/cacheKeys');
+const sequelize = require('../database');
 const {
   SaleRecord, SaleRecordDetail, Product, Customer, PaymentMethod,
 } = require('../models');
@@ -7,6 +8,7 @@ const redisClient = require('../redis');
 class SaleRecordController {
   // eslint-disable-next-line consistent-return, class-methods-use-this
   async store(req, res) {
+    const t = await sequelize.transaction();
     try {
       // eslint-disable-next-line camelcase
       const {
@@ -26,10 +28,28 @@ class SaleRecordController {
       }, {
         // eslint-disable-next-line camelcase
         include: [SaleRecordDetail],
-      });
+      }, { transaction: t });
+
+      try {
+        // eslint-disable-next-line camelcase
+        sale_record_details?.forEach(async (record) => {
+          await Product.decrement({
+            qty: record?.qty,
+          }, {
+            where: {
+              id: record?.product_id,
+            },
+          });
+        });
+      } catch (error) {
+        await t.rollback();
+      }
+      await t.commit();
+
       return res.status(200).json({ data: saleRecord });
     } catch (error) {
       console.log(error);
+      await t.rollback();
       res.status(500).json({ message: 'Error saving SaleRecord' });
     }
   }
@@ -104,6 +124,7 @@ class SaleRecordController {
           },
         ],
       });
+
       if (!result) {
         return res.status(404).json({ message: 'SaleRecord Not Found' });
       }
