@@ -2,6 +2,7 @@ const Admin = require('./model.admin');
 const Customer = require('./model.customer');
 const PaymentMethod = require('./model.payment_method');
 const Product = require('./model.product');
+const ProductPurchase = require('./model.product_purchase');
 const SaleRecord = require('./model.sale_record');
 const SaleRecordDetail = require('./model.sale_record_detail');
 
@@ -22,6 +23,13 @@ SaleRecordDetail.belongsTo(Product, {
 });
 SaleRecord.hasMany(SaleRecordDetail);
 
+Product.hasMany(ProductPurchase, {
+  foreignKey: 'product_id',
+});
+ProductPurchase.belongsTo(Product, {
+  foreignKey: 'product_id',
+});
+
 module.exports = {
   SaleRecord,
   SaleRecordDetail,
@@ -29,4 +37,5 @@ module.exports = {
   Product,
   Admin,
   PaymentMethod,
+  ProductPurchase,
 };
