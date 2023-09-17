@@ -78,6 +78,9 @@ class ProductController {
             as: 'product_purchases',
           },
         ],
+        order: [
+          [ProductPurchase, 'createdAt', 'DESC'],
+        ],
       });
       if (!result) {
         return res.status(404).json({ message: 'Product Not Found' });
