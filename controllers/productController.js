@@ -1,4 +1,5 @@
 const { PRODUCT_CACHE_KEY } = require('../constants/cacheKeys');
+const { ProductPurchase } = require('../models');
 const Product = require('../models/model.product');
 const redisClient = require('../redis');
 
@@ -41,6 +42,12 @@ class ProductController {
       const result = await Product.findAll({
         where: query,
         ...pagination,
+        include: [
+          {
+            model: ProductPurchase,
+            as: 'product_purchases',
+          },
+        ],
       });
 
       const total = await Product.count({ where: query });
@@ -48,7 +55,7 @@ class ProductController {
       if (result.length > 0) {
         const cacheKey = `${PRODUCT_CACHE_KEY}, ${Object.values(pagination).join('')}, ${Object.values(query).join('')}`;
         await redisClient.set(cacheKey, JSON.stringify({ result, total }), {
-          EX: 100,
+          EX: 10,
           NX: true,
         });
       }
@@ -65,6 +72,15 @@ class ProductController {
         where: {
           id: req.params.id,
         },
+        include: [
+          {
+            model: ProductPurchase,
+            as: 'product_purchases',
+          },
+        ],
+        order: [
+          [ProductPurchase, 'createdAt', 'DESC'],
+        ],
       });
       if (!result) {
         return res.status(404).json({ message: 'Product Not Found' });
