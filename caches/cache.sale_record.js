@@ -3,10 +3,20 @@ const redisClient = require('../redis');
 
 const SaleRecordCache = async (req, res, next) => {
   try {
-    const cachedData = await redisClient.get(SALE_RECORD_CACHE_KEY);
+    const query = {};
+    const pagination = {};
+    const { limit, page } = req.query;
+    pagination.limit = limit ? parseInt(limit, 10) : 10;
+    pagination.offset = page ? ((parseInt(page - 1, 10)) * parseInt(limit, 10)) : 0;
+
+    const cacheKey = `${SALE_RECORD_CACHE_KEY}, ${Object.values(pagination).join('')}, ${Object.values(query).join('')}`;
+    const cachedData = await redisClient.get(cacheKey);
+
     if (cachedData) {
-      const users = JSON.parse(cachedData);
-      res.json({ data: users });
+      const data = JSON.parse(cachedData);
+      const products = data?.result;
+      const total = data?.total;
+      res.json({ data: products, total });
     } else {
       // If cache miss, continue to route handler
       next();
