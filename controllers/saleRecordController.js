@@ -57,10 +57,21 @@ class SaleRecordController {
   // eslint-disable-next-line consistent-return, class-methods-use-this
   async index(req, res) {
     const query = {};
-
+    const pagination = {};
+    const { limit, page } = req.query;
+    if (limit) {
+      pagination.limit = parseInt(limit, 10);
+    }
+    if (page) {
+      pagination.offset = ((parseInt(page - 1, 10)) * parseInt(limit, 10));
+    }
     try {
       const result = await SaleRecord.findAll({
         where: query,
+        order: [
+          ['id', 'DESC'],
+        ],
+        ...pagination,
         include: [
           {
             model: SaleRecordDetail,
@@ -82,14 +93,16 @@ class SaleRecordController {
           },
         ],
       });
+      const total = await SaleRecord.count({ where: query });
 
       if (result.length > 0) {
-        await redisClient.set(SALE_RECORD_CACHE_KEY, JSON.stringify(result), {
+        const cacheKey = `${SALE_RECORD_CACHE_KEY}, ${Object.values(pagination).join('')}, ${Object.values(query).join('')}`;
+        await redisClient.set(cacheKey, JSON.stringify({ result, total }), {
           EX: 10,
           NX: true,
         });
       }
-      return res.status(200).json({ data: result });
+      return res.status(200).json({ data: result, total });
     } catch (error) {
       console.log(error);
       res.status(401).json({ message: error });

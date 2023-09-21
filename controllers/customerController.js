@@ -24,19 +24,29 @@ class CustomerController {
   // eslint-disable-next-line consistent-return, class-methods-use-this
   async index(req, res) {
     const query = {};
-
+    const pagination = {};
+    const { limit, page } = req.query;
+    if (limit) {
+      pagination.limit = parseInt(limit, 10);
+    }
+    if (page) {
+      pagination.offset = ((parseInt(page - 1, 10)) * parseInt(limit, 10));
+    }
     try {
       const result = await Customer.findAll({
         where: query,
+        ...pagination,
       });
+      const total = await Customer.count({ where: query });
 
       if (result.length > 0) {
-        await redisClient.set(CUSTOMER_CACHE_KEY, JSON.stringify(result), {
+        const cacheKey = `${CUSTOMER_CACHE_KEY}, ${Object.values(pagination).join('')}, ${Object.values(query).join('')}`;
+        await redisClient.set(cacheKey, JSON.stringify({ result, total }), {
           EX: 10,
           NX: true,
         });
       }
-      return res.status(200).json({ data: result });
+      return res.status(200).json({ data: result, total });
     } catch (error) {
       res.status(401).json({ message: error });
     }

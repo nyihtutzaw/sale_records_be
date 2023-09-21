@@ -35,12 +35,15 @@ class ProductController {
       pagination.limit = parseInt(limit, 10);
     }
     if (page) {
-      pagination.offset = ((parseInt(page, 10)) * parseInt(limit, 10));
+      pagination.offset = ((parseInt(page - 1, 10)) * parseInt(limit, 10));
     }
 
     try {
       const result = await Product.findAll({
         where: query,
+        order: [
+          ['id', 'DESC'],
+        ],
         ...pagination,
         include: [
           {
@@ -79,7 +82,8 @@ class ProductController {
           },
         ],
         order: [
-          [ProductPurchase, 'createdAt', 'DESC'],
+          ['id', 'DESC'],
+          [ProductPurchase, 'id', 'DESC'],
         ],
       });
       if (!result) {

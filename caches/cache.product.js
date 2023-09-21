@@ -7,7 +7,7 @@ const ProductCache = async (req, res, next) => {
     const pagination = {};
     const { limit, page } = req.query;
     pagination.limit = limit ? parseInt(limit, 10) : 10;
-    pagination.offset = page ? ((parseInt(page, 10)) * parseInt(limit, 10)) : 0;
+    pagination.offset = page ? ((parseInt(page - 1, 10)) * parseInt(limit, 10)) : 0;
 
     const cacheKey = `${PRODUCT_CACHE_KEY}, ${Object.values(pagination).join('')}, ${Object.values(query).join('')}`;
     const cachedData = await redisClient.get(cacheKey);
