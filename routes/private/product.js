@@ -17,6 +17,7 @@ module.exports = (routes) => {
     ProductController.store,
   );
   routes.get('/product', ProductCache, ProductController.index);
+  routes.get('/search-product', ProductController.getProducts);
   routes.get('/product/:id', ProductController.each);
   routes.put('/product/:id', ProductController.update);
   routes.delete('/product/:id', ProductController.delete);

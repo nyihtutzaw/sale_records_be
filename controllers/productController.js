@@ -1,3 +1,5 @@
+const { Op } = require('sequelize');
+
 const { PRODUCT_CACHE_KEY } = require('../constants/cacheKeys');
 const { ProductPurchase } = require('../models');
 const Product = require('../models/model.product');
@@ -63,6 +65,26 @@ class ProductController {
         });
       }
       return res.status(200).json({ data: result, total });
+    } catch (error) {
+      res.status(401).json({ message: error });
+    }
+  }
+
+  // eslint-disable-next-line consistent-return, class-methods-use-this
+  async getProducts(req, res) {
+    const query = {};
+    if (req.query.search) {
+      query.name = {
+        [Op.like]: `%${req.query.search}%`,
+      };
+    }
+
+    try {
+      const result = await Product.findAll({
+        where: query,
+      });
+
+      return res.status(200).json({ data: result });
     } catch (error) {
       res.status(401).json({ message: error });
     }
