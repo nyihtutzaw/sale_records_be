@@ -1,5 +1,6 @@
 const Admin = require('./model.admin');
 const Customer = require('./model.customer');
+const DeliveryMethod = require('./model.delivery_method');
 const PaymentMethod = require('./model.payment_method');
 const Product = require('./model.product');
 const ProductPurchase = require('./model.product_purchase');
@@ -15,9 +16,9 @@ SaleRecord.belongsTo(Admin, {
 SaleRecord.belongsTo(PaymentMethod, {
   foreignKey: 'payment_method_id',
 });
-// SaleRecordDetail.belongsTo(SaleRecord, {
-//   foreignKey: 'sale_record_id',
-// });
+SaleRecord.belongsTo(DeliveryMethod, {
+  foreignKey: 'delivery_method_id',
+});
 SaleRecordDetail.belongsTo(Product, {
   foreignKey: 'product_id',
 });
@@ -38,4 +39,5 @@ module.exports = {
   Admin,
   PaymentMethod,
   ProductPurchase,
+  DeliveryMethod,
 };

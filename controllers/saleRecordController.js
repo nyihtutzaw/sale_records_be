@@ -1,7 +1,7 @@
 const { SALE_RECORD_CACHE_KEY } = require('../constants/cacheKeys');
 const sequelize = require('../database');
 const {
-  SaleRecord, SaleRecordDetail, Product, Customer, PaymentMethod,
+  SaleRecord, SaleRecordDetail, Product, Customer, PaymentMethod, DeliveryMethod,
 } = require('../models');
 const redisClient = require('../redis');
 
@@ -13,7 +13,7 @@ class SaleRecordController {
       // eslint-disable-next-line camelcase
       const {
       // eslint-disable-next-line camelcase
-        customer_id, payment_method_id, date, sale_record_details,
+        customer_id, payment_method_id, date, sale_record_details, delivery_method_id,
       } = req.body;
 
       const saleRecord = await SaleRecord.create({
@@ -21,6 +21,8 @@ class SaleRecordController {
         customer_id,
         // eslint-disable-next-line camelcase
         payment_method_id,
+        // eslint-disable-next-line camelcase
+        delivery_method_id,
         date,
         created_by: req.id,
         // eslint-disable-next-line camelcase
@@ -91,6 +93,10 @@ class SaleRecordController {
             model: PaymentMethod,
             as: 'payment_method',
           },
+          {
+            model: DeliveryMethod,
+            as: 'delivery_method',
+          },
         ],
       });
       const total = await SaleRecord.count({ where: query });
@@ -134,6 +140,10 @@ class SaleRecordController {
           {
             model: PaymentMethod,
             as: 'payment_method',
+          },
+          {
+            model: DeliveryMethod,
+            as: 'delivery_method',
           },
         ],
       });

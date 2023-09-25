@@ -11,6 +11,10 @@ const SaleRecord = sequelize.define('sale_record', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  delivery_method_id: {
+    type: DataTypes.INTEGER,
+    // allowNull: false,
+  },
   created_by: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -21,4 +25,5 @@ const SaleRecord = sequelize.define('sale_record', {
   },
 });
 
+// SaleRecord.sync({ alter: true });
 module.exports = SaleRecord;

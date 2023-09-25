@@ -4,6 +4,7 @@ const AuthMiddleware = require('../middlewares/auth');
 
 const AdminRoutes = require('./private/admin');
 const CustomerRoutes = require('./private/customer');
+const DeliveryMethodRoutes = require('./private/delivery_method');
 const InvoiceSettingRoutes = require('./private/invoice_setting');
 const PaymentMethodRoutes = require('./private/payment_method');
 const ProductRoutes = require('./private/product');
@@ -25,6 +26,7 @@ module.exports = (app) => {
   AdminRoutes(routes);
   SaleRecordRoutes(routes);
   PaymentMethodRoutes(routes);
+  DeliveryMethodRoutes(routes);
   InvoiceSettingRoutes(routes);
   // app.use('/api/', [apiLimiter, routes])
   app.use('/api/', [routes]);
