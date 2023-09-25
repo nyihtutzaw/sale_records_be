@@ -40,6 +40,7 @@ const Product_Create_Validation = [
 const Sale_Record_Create_Validation = [
   body('customer_id').isLength(1),
   body('payment_method_id').isLength(1),
+  body('delivery_method_id').isLength(1),
   body('date').isLength(1),
   body('sale_record_details').isLength(1),
 ];
@@ -53,6 +54,11 @@ const InvoiceSetting_Create_Validation = [
 
 // eslint-disable-next-line camelcase
 const PaymentMethod_Create_Validation = [
+  body('name').isLength(1),
+];
+
+// eslint-disable-next-line camelcase
+const DeliveryMethod_Create_Validation = [
   body('name').isLength(1),
 ];
 
@@ -71,4 +77,6 @@ module.exports = {
   PaymentMethod_Create_Validation,
   // eslint-disable-next-line camelcase
   InvoiceSetting_Create_Validation,
+  // eslint-disable-next-line camelcase
+  DeliveryMethod_Create_Validation,
 };
