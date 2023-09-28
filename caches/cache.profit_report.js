@@ -1,14 +1,14 @@
-const { SALE_RECORD_DETAIL_CACHE_KEY } = require('../constants/cacheKeys');
+const { PROFIT_REPORT_CACHE_KEY } = require('../constants/cacheKeys');
 const redisClient = require('../redis');
 
-const SaleRecordDetailCache = async (req, res, next) => {
+const ProfitReportCache = async (req, res, next) => {
   try {
-    const cachedData = await redisClient.get(SALE_RECORD_DETAIL_CACHE_KEY);
+    const cachedData = await redisClient.get(PROFIT_REPORT_CACHE_KEY);
     if (cachedData) {
       const data = JSON.parse(cachedData);
       const products = data?.result;
-      const total = data?.total;
-      res.json({ data: products, total });
+      const totalProfit = data?.totalProfit;
+      res.json({ data: products, totalProfit });
     } else {
       // If cache miss, continue to route handler
       next();
@@ -20,4 +20,4 @@ const SaleRecordDetailCache = async (req, res, next) => {
   }
 };
 
-module.exports = SaleRecordDetailCache;
+module.exports = ProfitReportCache;

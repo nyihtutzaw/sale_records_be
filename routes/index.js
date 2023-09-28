@@ -8,6 +8,7 @@ const DeliveryMethodRoutes = require('./private/delivery_method');
 const InvoiceSettingRoutes = require('./private/invoice_setting');
 const PaymentMethodRoutes = require('./private/payment_method');
 const ProductRoutes = require('./private/product');
+const ReportRoutes = require('./private/report');
 const SaleRecordRoutes = require('./private/sale_record');
 const PublicRoutes = require('./public');
 
@@ -28,6 +29,7 @@ module.exports = (app) => {
   PaymentMethodRoutes(routes);
   DeliveryMethodRoutes(routes);
   InvoiceSettingRoutes(routes);
+  ReportRoutes(routes);
   // app.use('/api/', [apiLimiter, routes])
   app.use('/api/', [routes]);
 };

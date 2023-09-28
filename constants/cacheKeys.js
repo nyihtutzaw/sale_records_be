@@ -7,6 +7,7 @@ const SALE_RECORD_DETAIL_CACHE_KEY = 'sale_record_details';
 const PAYMENT_METHOD_CACHE_KEY = 'payment_method';
 const DELIVERY_METHOD_CACHE_KEY = 'delivery_method';
 const INVOICE_SETTING_CACHE_KEY = 'invoice_setting';
+const PROFIT_REPORT_CACHE_KEY = 'profit_report';
 
 module.exports = {
   // eslint-disable-next-line camelcase
@@ -21,4 +22,5 @@ module.exports = {
   INVOICE_SETTING_CACHE_KEY,
   PRODUCT_PURCHASE_CACHE_KEY,
   DELIVERY_METHOD_CACHE_KEY,
+  PROFIT_REPORT_CACHE_KEY,
 };

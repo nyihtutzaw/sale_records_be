@@ -22,6 +22,13 @@ SaleRecord.belongsTo(DeliveryMethod, {
 SaleRecordDetail.belongsTo(Product, {
   foreignKey: 'product_id',
 });
+SaleRecordDetail.belongsTo(SaleRecord, {
+  foreignKey: 'saleRecordId',
+});
+
+Product.hasMany(SaleRecordDetail, {
+  foreignKey: 'product_id',
+});
 SaleRecord.hasMany(SaleRecordDetail);
 
 Product.hasMany(ProductPurchase, {
