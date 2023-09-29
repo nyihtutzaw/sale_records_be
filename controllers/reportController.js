@@ -1,75 +1,48 @@
-const { Op } = require('sequelize');
-
 const { SALE_RECORD_DETAIL_CACHE_KEY } = require('../constants/cacheKeys');
 const sequelize = require('../database');
-const { SaleRecordDetail, Product, SaleRecord } = require('../models');
 const redisClient = require('../redis');
 
 class ReportController {
   // eslint-disable-next-line consistent-return, class-methods-use-this
   async profitReport(req, res) {
-    const t = await sequelize.transaction();
-    const query = {};
-    if (req.query.start_date && req.query.end_date) {
-      query.date = {
-        [Op.gte]: req.query.start_date,
-        [Op.lte]: req.query.end_date,
-      };
+    if (!req.query.start_date || !req.query.end_date) {
+      res.status(401).json({ message: 'Date range filter is not included' });
     }
+
     try {
-      const result = await SaleRecordDetail.findAll({
-        order: [
-          ['id', 'DESC'],
-        ],
-        include: [
-          {
-            model: SaleRecord,
-            required: true,
-            where: query,
-          },
-          {
-            model: Product,
-            as: 'Product',
-          },
-        ],
-      }, { transaction: t });
+      const startDate = req.query.start_date;
+      const endDate = req.query.end_date;
 
-      const totals = result.reduce(
-        (acc, record) => {
-          acc.totalQty += record.qty;
-          acc.totalPrice += record.price;
-          return acc;
-        },
-        { totalQty: 0, totalPrice: 0 },
-      );
-
-      let totalProfit = 0;
-      if (totals.totalPrice > 0) {
-        const sumOfSoldProductInitPrices = await Product.sum('initPrice', {
-          include: [
-            {
-              model: SaleRecordDetail,
-              required: true,
-            },
-          ],
-        }, { transaction: t });
-        totalProfit = (totals.totalPrice * totals.totalQty)
-      - (sumOfSoldProductInitPrices * totals.totalQty);
-      }
-
+      const result = await sequelize.query(`
+      SELECT
+        P.name,
+        SUM(SRD.qty) AS totalQty,
+        SUM(SRD.qty) * SRD.price AS totalSoldAmount,
+        SUM(SRD.qty) * P.price AS totalPurchaseAmount,
+        (SUM(SRD.qty * P.price) - SUM(SRD.qty * SRD.price)) AS profit
+        FROM
+        sale_record_details SRD
+        INNER JOIN sale_records SR ON SRD.saleRecordId = SR.id
+        INNER JOIN products P ON SRD.product_id = P.id
+        WHERE
+        SR.date >= :startDate AND SR.date <= :endDate
+      GROUP BY
+        SRD.product_id
+    `, {
+        type: sequelize.QueryTypes.SELECT,
+        replacements: { startDate, endDate },
+      });
       if (result.length > 0) {
         const cacheKey = SALE_RECORD_DETAIL_CACHE_KEY;
-        await redisClient.set(cacheKey, JSON.stringify({ result, totalProfit }), {
+        await redisClient.set(cacheKey, JSON.stringify({ result }), {
           EX: 10,
           NX: true,
         });
       }
       return res.status(200).json({
         data: result,
-        totalProfit,
       });
     } catch (error) {
-      console.log(error);
       res.status(401).json({ message: error });
     }
   }

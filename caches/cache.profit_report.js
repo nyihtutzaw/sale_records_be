@@ -7,8 +7,8 @@ const ProfitReportCache = async (req, res, next) => {
     if (cachedData) {
       const data = JSON.parse(cachedData);
       const products = data?.result;
-      const totalProfit = data?.totalProfit;
-      res.json({ data: products, totalProfit });
+      // const totalProfit = data?.totalProfit;
+      res.json({ data: products });
     } else {
       // If cache miss, continue to route handler
       next();
