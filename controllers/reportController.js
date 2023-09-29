@@ -1,4 +1,4 @@
-const { SALE_RECORD_DETAIL_CACHE_KEY } = require('../constants/cacheKeys');
+const { PROFIT_REPORT_CACHE_KEY } = require('../constants/cacheKeys');
 const sequelize = require('../database');
 const redisClient = require('../redis');
 
@@ -33,7 +33,7 @@ class ReportController {
         replacements: { startDate, endDate },
       });
       if (result.length > 0) {
-        const cacheKey = SALE_RECORD_DETAIL_CACHE_KEY;
+        const cacheKey = `${PROFIT_REPORT_CACHE_KEY}${startDate}${endDate}`;
         await redisClient.set(cacheKey, JSON.stringify({ result }), {
           EX: 10,
           NX: true,

@@ -3,11 +3,14 @@ const redisClient = require('../redis');
 
 const ProfitReportCache = async (req, res, next) => {
   try {
-    const cachedData = await redisClient.get(PROFIT_REPORT_CACHE_KEY);
+    // eslint-disable-next-line camelcase
+    const { start_date, end_date } = req.query;
+    // eslint-disable-next-line camelcase
+    const cacheKey = `${PROFIT_REPORT_CACHE_KEY}${start_date}${end_date}`;
+    const cachedData = await redisClient.get(cacheKey);
     if (cachedData) {
       const data = JSON.parse(cachedData);
       const products = data?.result;
-      // const totalProfit = data?.totalProfit;
       res.json({ data: products });
     } else {
       // If cache miss, continue to route handler
