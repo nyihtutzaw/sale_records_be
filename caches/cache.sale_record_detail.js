@@ -5,8 +5,10 @@ const SaleRecordDetailCache = async (req, res, next) => {
   try {
     const cachedData = await redisClient.get(SALE_RECORD_DETAIL_CACHE_KEY);
     if (cachedData) {
-      const users = JSON.parse(cachedData);
-      res.json({ data: users });
+      const data = JSON.parse(cachedData);
+      const products = data?.result;
+      const total = data?.total;
+      res.json({ data: products, total });
     } else {
       // If cache miss, continue to route handler
       next();
