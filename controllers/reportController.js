@@ -25,9 +25,10 @@ class ReportController {
         INNER JOIN sale_records SR ON SRD.saleRecordId = SR.id
         INNER JOIN products P ON SRD.product_id = P.id
         WHERE
-        SR.date >= :startDate AND SR.date <= :endDate
+        DATE(SR.date) >= :startDate AND DATE(SR.date) <= :endDate
       GROUP BY
         SRD.product_id
+        order by totalQty desc
     `, {
         type: sequelize.QueryTypes.SELECT,
         replacements: { startDate, endDate },
